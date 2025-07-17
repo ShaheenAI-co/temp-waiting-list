@@ -1,0 +1,42 @@
+name: Mirror Private Repo to Personal Account
+
+on:
+  push:
+    # Define which branches trigger this workflow.
+    # Change 'main' to 'master' or include other branches if needed.
+    branches:
+      - main
+      # - develop # Uncomment to also mirror 'develop' branch
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source repository
+        uses: actions/checkout@v4
+        with:
+          # Fetch all history, branches, and tags for a complete mirror
+          fetch-depth: 0
+
+      - name: Configure Git and Push to Personal Repo
+        env:
+          # This uses the secret you created in Step 3
+          PERSONAL_REPO_TOKEN: ${{ secrets.MIRROR_TOKEN }}
+          # Replace <YOUR_USERNAME> with your GitHub personal username
+          # Replace <YOUR_PERSONAL_REPO_NAME> with the name from Step 1
+          PERSONAL_MIRROR_REPO: "github.com/McShnaib/shaheen-waitlist-mirror.git"
+        run: |
+          echo "Starting mirror operation..."
+
+          # Set Git user details for the push
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Add the personal repo as a remote, using the PAT for authentication
+          git remote add personal-mirror https://x-access-token:${PERSONAL_REPO_TOKEN}@${PERSONAL_MIRROR_REPO}
+
+          # Push all branches and tags to the personal mirror
+          # --mirror ensures all refs (branches, tags) are pushed and deleted if they no longer exist in the source
+          git push --mirror personal-mirror
+
+          echo "Mirror operation complete."

@@ -20,6 +20,27 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Environment Variables
+
+Create a `.env.local` file in the root of the project with the following variables:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+```
+
+Replace `your-supabase-url` and `your-supabase-anon-key` with your actual Supabase project credentials.
+
+## Supabase Table Setup
+
+Create a table named `waiting_list` in your Supabase project with the following columns:
+- `id`: bigint, primary key, auto-increment
+- `email`: text, required
+- `phone`: text, optional
+- `created_at`: timestamp, default to now()
+
+This will allow the form to store user signups.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
